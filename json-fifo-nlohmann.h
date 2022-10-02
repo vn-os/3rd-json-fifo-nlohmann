@@ -16,4 +16,38 @@ value_t json_get(const json& jobject, const std::string& name, const value_t def
   return jobject.contains(name) ? jobject[name].get<value_t>() : def;
 }
 
+#include <fstream>
+
+bool json_load_from_file(const std::string& file_path, json& data)
+{
+  data.clear();
+
+  try
+  {
+    std::ifstream fs(file_path);
+    data = json::parse(fs, nullptr, true, true);
+  }
+  catch (...)
+  {
+    return false;
+  }
+
+  return true;
+}
+
+bool json_save_to_file(const std::string& file_path, const json& data)
+{
+  try
+  {
+    std::ofstream fs(file_path);
+    fs << data.dump(2, ' ');
+  }
+  catch (...)
+  {
+    return false;
+  }
+
+  return true;
+}
+
 #endif  // INCLUDE_JSON_FIFO_NLOHMANN_H_
