@@ -18,7 +18,7 @@ value_t json_get(const json& jobject, const std::string& name, const value_t def
 
 #include <fstream>
 
-bool json_load_from_file(const std::string& file_path, json& data)
+static bool json_load_from_file(const std::string& file_path, json& data)
 {
   data.clear();
 
@@ -35,7 +35,7 @@ bool json_load_from_file(const std::string& file_path, json& data)
   return true;
 }
 
-bool json_save_to_file(const std::string& file_path, const json& data)
+static bool json_save_to_file(const std::string& file_path, const json& data)
 {
   try
   {
