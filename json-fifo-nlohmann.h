@@ -4,6 +4,9 @@
 #include "nlohmann/json.hpp"
 #include "nlohmann/fifo_map.hpp"
 
+#include <fstream>
+#include <algorithm>
+
 // using json = nlohmann::json; // ordered
 
 template<class K, class V, class dummy_compare, class A>
@@ -16,7 +19,17 @@ value_t json_get(const json& jobject, const std::string& name, const value_t def
   return jobject.contains(name) ? jobject[name].get<value_t>() : def;
 }
 
-#include <fstream>
+template <>
+inline std::wstring json_get(const json& jobject, const std::string& name, const std::wstring def)
+{
+  std::string adef;
+  std::transform(def.begin(), def.end(), std::back_inserter(adef), [](wchar_t c) { return char(c); });
+
+  std::string astr = json_get(jobject, name, adef);
+  std::wstring result(astr.begin(), astr.end());
+
+  return result;
+}
 
 static bool json_load_from_file(const std::string& file_path, json& data)
 {
